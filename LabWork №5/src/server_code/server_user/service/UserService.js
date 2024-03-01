@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const {badRequest} = require('../errors')
+const {badRequest, notFound} = require('../errors')
 const {User} = require('../model')
 
 const generateJWT = (email, fullName, id) => {
@@ -9,10 +9,6 @@ const generateJWT = (email, fullName, id) => {
 
 
 class UserService {
-
-    async ping(req, res, next) {
-        res.send("pong");
-    }
 
     async login(req, res, next){
         const {email, password} = req.body;
@@ -85,39 +81,62 @@ class UserService {
             next(e);
         }
     }
+
+    async getUser(req, res, next){
+        const id = req.params.userId;
+
+        try{
+            const user = await User.findOne({where: {id}});
+
+            if(!user){
+                return next(notFound('User not found'))
+            }
+
+            console.log(user)
+
+            res.json({
+                id: user.id,
+                fullName: user.fullName,
+                email: user.email,
+            });
+        }
+        catch (e) {
+            next(e);
+        }
+    }
 }
 
 const validation = {
-  login: {
-      body: [
-          {
-              name: 'email',
-              type: 'string',
-          },
-          {
-              name: 'password',
-              type: 'string',
-          },
-      ],
-      params: [],
-  },
-  registration: {
-      body: [
-          {
-              name: 'email',
-              type: 'string',
-          },
-          {
-              name: 'password',
-              type: 'string',
-          },
-          {
-              name: 'fullName',
-              type: 'string',
-          },
-      ],
-      params: [],
-  },
+    login: {
+        body: [
+            {
+                name: 'email',
+                type: 'string',
+            },
+            {
+                name: 'password',
+                type: 'string',
+            },
+        ],
+        params: [],
+    },
+    registration: {
+        body: [
+            {
+                name: 'email',
+                type: 'string',
+            },
+            {
+                name: 'password',
+                type: 'string',
+            },
+            {
+                name: 'fullName',
+                type: 'string',
+            },
+        ],
+        params: [],
+    },
     changeInfo: {
         body: [
             {
@@ -130,6 +149,15 @@ const validation = {
             },
         ],
         params: [],
+    },
+    getUser: {
+        body: [],
+        params: [
+            {
+                name: 'userId',
+                type: 'number',
+            },
+        ],
     },
 };
 
