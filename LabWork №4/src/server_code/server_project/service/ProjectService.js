@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const {badRequest, notFound} = require('../errors/index')
-const {Project} = require('../model/index')
+const {badRequest, notFound} = require('../errors')
+const {Project} = require('../model')
 const {UserProjects} = require("../model");
 
 

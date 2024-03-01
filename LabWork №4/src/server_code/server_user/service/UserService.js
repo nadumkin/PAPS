@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const {badRequest} = require('../errors/index')
-const {User} = require('../model/index')
+const {badRequest} = require('../errors')
+const {User} = require('../model')
 
 const generateJWT = (email, fullName, id) => {
     return jwt.sign({email, fullName, id}, process.env.JWT_SECRET_KEY, {expiresIn: "24h"})
@@ -30,6 +30,7 @@ class UserService {
             return res.json({token: generateJWT(user.email, user.fullName, user.id)})
         }
         catch (e) {
+            console.log(e);
             next(e);
         }
     }
@@ -43,6 +44,7 @@ class UserService {
             return res.json({token: generateJWT(email, fullName, user.id)})
         }
         catch (e) {
+            console.log(e);
             next(e);
         }
     }
