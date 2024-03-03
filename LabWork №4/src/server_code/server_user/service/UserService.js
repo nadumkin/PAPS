@@ -37,7 +37,7 @@ class UserService {
             const hashPassword = await bcrypt.hash(password, 5)
             const user = await User.create({email, fullName, password: hashPassword})
 
-            return res.json({token: generateJWT(email, fullName, user.id)})
+            return res.status(201).json({token: generateJWT(email, fullName, user.id)})
         }
         catch (e) {
             console.log(e);
