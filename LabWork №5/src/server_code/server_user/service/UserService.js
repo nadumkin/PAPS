@@ -34,10 +34,18 @@ class UserService {
     async registration(req, res, next){
         const {email, password, fullName} = req.body;
         try{
-            const hashPassword = await bcrypt.hash(password, 5)
-            const user = await User.create({email, fullName, password: hashPassword})
 
-            return res.json({token: generateJWT(email, fullName, user.id)})
+            if(await User.findOne({where: {email}})) return next(badRequest('User already exists'));
+
+            const user = await User.create(
+                {
+                    email,
+                    fullName,
+                    password: await bcrypt.hash(password, 5)
+                }
+            );
+
+            return res.status(201).json({token: generateJWT(email, fullName, user.id)})
         }
         catch (e) {
             console.log(e);
@@ -135,7 +143,6 @@ const validation = {
                 type: 'string',
             },
         ],
-        params: [],
     },
     changeInfo: {
         body: [

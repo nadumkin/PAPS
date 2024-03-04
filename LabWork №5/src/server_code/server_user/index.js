@@ -17,6 +17,7 @@ app.use('', userRouter);
 app.use(errorMiddleware);
 
 const start = async () => {
+    console.log('run server')
     try{
         await sequelize.authenticate()
         await sequelize.sync()
@@ -27,3 +28,7 @@ const start = async () => {
 }
 
 start();
+
+module.exports = {
+    start
+};
