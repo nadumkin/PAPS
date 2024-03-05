@@ -17,11 +17,10 @@ app.use('', userRouter);
 app.use(errorMiddleware);
 
 const start = async () => {
-    console.log('run server')
     try{
         await sequelize.authenticate()
         await sequelize.sync()
-        app.listen(PORT, () => console.log(`User service is runnig on port ${PORT}`))
+        app.listen(PORT, () => console.log(`User service is runnig on port ${PORT}`));
     } catch(e) {
         console.log(e);
     }
@@ -30,5 +29,5 @@ const start = async () => {
 start();
 
 module.exports = {
-    start
+    app
 };

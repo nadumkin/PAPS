@@ -67,7 +67,8 @@ class UserService {
         const email = req.user_info.email;
 
         try{
-            const user = await User.findOne({where: {email}})
+            const user = await User.findOne({where: {email}});
+            if(user === null) return next(badRequest('User not found'));
             user.password = await bcrypt.hash(password, 5);
             user.fullName = fullName;
             user.save();
@@ -99,8 +100,6 @@ class UserService {
             if(!user){
                 return next(notFound('User not found'))
             }
-
-            console.log(user)
 
             res.json({
                 id: user.id,

@@ -1,0 +1,18 @@
+name: Just test
+# Запуск при любом push евенте в любой ветке, за исключением релизных тэгов.
+# Они будт тестироваться перед сборкой
+on:
+  push:
+    branches:
+      - '*'
+jobs:
+  Run_tests:
+    runs-on: [ubuntu-latest]
+    steps:
+      # Чекаутим код
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install requirements
+        run: npm ci
+      - name: Run tests
+        run: npm run test
